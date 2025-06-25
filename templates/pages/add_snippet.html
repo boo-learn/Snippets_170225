@@ -1,22 +1,26 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container">
-    <div class="row">
-        <div class="col">
-            <h1>{{ pagename }}</h1>
-            <hr>
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <h1>{{ pagename }}</h1>
+                <hr>
+            </div>
         </div>
-    </div>
 
-    <div class="row">
-        <div class="col">
-            <form action="{% url 'snippet-add' %}" method="post">
+        <div class="row">
+            <div class="col">
+                {% if edit %}
+                    <form action="{% url 'snippet-edit' id %}" method="post">
+                {% else %}
+                    <form action="{% url 'snippet-add' %}" method="post">
+                {% endif %}
                 {% csrf_token %}
                 {{ form }}
                 <input type="submit" class="btn btn-primary btn-block" value="Сохранить">
-            </form>
+                </form>
+            </div>
         </div>
     </div>
-</div>
 {% endblock %}

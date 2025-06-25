@@ -2,7 +2,7 @@ from django.db import models
 
 
 class Snippet(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100) # -> input
     lang = models.CharField(max_length=30)
-    code = models.TextField(max_length=5000)
+    code = models.TextField(max_length=5000) # -> textarea
     creation_date = models.DateTimeField(auto_now=True)
