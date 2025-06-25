@@ -11,34 +11,11 @@
 
     <div class="row">
         <div class="col">
-            <form action="" method="post">
-                <div class="form-group row">
-                    <div class="col-8">
-                        <input type="text" name="name" class="form-control form-control-lg"
-                               placeholder="Название сниппета">
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <div class="col-8">
-                        <select class="form-control" name="lang">
-                            <option>Python</option>
-                            <option>C++</option>
-                            <option>JavaScript</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <div class="col-8">
-                        <textarea cols="96" rows="10" placeholder="Код сниппета"></textarea>
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <div class="col-8">
-                        <input type="submit" class="btn btn-primary btn-block" value="Сохранить">
-                    </div>
-                </div>
+            <form action="{% url 'snippet-add' %}" method="post">
+                {% csrf_token %}
+                {{ form }}
+                <input type="submit" class="btn btn-primary btn-block" value="Сохранить">
             </form>
-
         </div>
     </div>
 </div>
