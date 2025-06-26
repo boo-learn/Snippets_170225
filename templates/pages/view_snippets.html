@@ -1,4 +1,17 @@
 {% extends 'base.html' %}
+{% block style %}
+    {{ block.super }}
+    <style>
+        .hidden {
+            display: none;
+            position: absolute;
+        }
+
+        .snippet:hover .hidden {
+            display: inline-block;
+        }
+    </style>
+{% endblock %}
 
 {% block content %}
     <div class="container">
@@ -22,15 +35,21 @@
                     <tbody>
 
                     {% for snippet in snippets %}
-                    <tr>
-                        <td scope="row">{{ snippet.id }}</td>
-                        <td>
-                            <a href="{% url 'snippet-detail' snippet.id %}">{{ snippet.name }}</a>
-                            <a href="{% url 'snippet-delete' snippet.id %}"> <i style="color: #965656" class="fa-solid fa-trash"></i></a>
-                            <a href="{% url 'snippet-edit' snippet.id %}"> <i class="fa-solid fa-pencil"></i></a>
-                        </td>
-                        <td>{{ snippet.creation_date }}</td>
-                    </tr>
+                        <tr>
+                            <td scope="row">{{ snippet.id }}</td>
+                            <td class="snippet">
+                                <a href="{% url 'snippet-detail' snippet.id %}">{{ snippet.name }}</a>
+                                <div class="hidden">
+                                    <a href="{% url 'snippet-delete' snippet.id %}">
+                                        <i style="color: #965656" class="fa-solid fa-trash"></i>
+                                    </a>
+                                    <a href="{% url 'snippet-edit' snippet.id %}">
+                                        <i class="fa-solid fa-pencil"></i>
+                                    </a>
+                                </div>
+                            </td>
+                            <td>{{ snippet.creation_date }}</td>
+                        </tr>
                     {% endfor %}
 
 
