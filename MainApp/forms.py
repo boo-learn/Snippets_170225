@@ -1,12 +1,6 @@
 from django import forms
 from MainApp.models import Snippet
-
-LANG_CHOICES = [
-    ("python", "Python"),
-    ("cpp", "C++"),
-    ("java", "Java"),
-    ("javascript", "JavaScript")
-]
+from MainApp.models import LANG_CHOICES
 
 
 class SnippetForm(forms.ModelForm):
