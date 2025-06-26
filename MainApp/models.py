@@ -7,6 +7,12 @@ LANG_CHOICES = [
     ("javascript", "JavaScript")
 ]
 
+LANG_ICON = {
+    "python": "fa-brands fa-python",
+    "javascript": "fa-brands fa-js",
+    "java": "fa-brands fa-java",
+}
+
 class Snippet(models.Model):
     name = models.CharField(max_length=100)  # -> input
     lang = models.CharField(max_length=30, choices=LANG_CHOICES)
