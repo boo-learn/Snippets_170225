@@ -18,14 +18,48 @@
                 {% endif %}
 
                 {% csrf_token %}
+                {% for error in form.non_field_errors %}
+                    <div class="alert alert-danger" role="alert">
+                        <ul>
+                            <li>{{ error }}</li>
+                        </ul>
+                    </div>
+                {% endfor %}
                 <div class="mb-3">
                     {{ form.name }}
+                    {% if  form.name.errors %}
+                        <div class="alert alert-danger" role="alert">
+                            <ul>
+                                {% for error in form.name.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
                 </div>
                 <div class="mb-3">
                     {{ form.lang }}
+                    {% if  form.lang.errors %}
+                        <div class="alert alert-danger" role="alert">
+                            <ul>
+                                {% for error in form.lang.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
                 </div>
                 <div class="mb-3">
                     {{ form.code }}
+                    {% if  form.lang.code %}
+                        <div class="alert alert-danger" role="alert">
+                            <ul>
+                                {% for error in form.lang.code %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
                 </div>
                 <input type="submit" class="btn btn-primary btn-block" value="Сохранить">
                 </form>

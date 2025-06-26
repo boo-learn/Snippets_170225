@@ -21,3 +21,9 @@ class SnippetForm(forms.ModelForm):
             ),
             'code': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Код сниппета'}),
         }
+
+    def clean_name(self):
+        name = self.cleaned_data['name']
+        if len(name) < 5:
+            raise forms.ValidationError("name must be 5 or more letters")
+        return name
