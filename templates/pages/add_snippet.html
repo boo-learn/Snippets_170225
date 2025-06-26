@@ -10,14 +10,23 @@
         </div>
 
         <div class="row">
-            <div class="col">
+            <div class="col-8">
                 {% if edit %}
                     <form action="{% url 'snippet-edit' id %}" method="post">
                 {% else %}
                     <form action="{% url 'snippet-add' %}" method="post">
                 {% endif %}
+
                 {% csrf_token %}
-                {{ form }}
+                <div class="mb-3">
+                    {{ form.name }}
+                </div>
+                <div class="mb-3">
+                    {{ form.lang }}
+                </div>
+                <div class="mb-3">
+                    {{ form.code }}
+                </div>
                 <input type="submit" class="btn btn-primary btn-block" value="Сохранить">
                 </form>
             </div>

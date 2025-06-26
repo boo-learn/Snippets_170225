@@ -12,22 +12,17 @@ def index_page(request):
 def add_snippet_page(request):
     if request.method == 'GET':
         form = SnippetForm()
-        return render(request, 'pages/add_snippet.html',
-                      {'form': form, "pagename": "Создание сниппета"}
-                      )
+        context = {'form': form, "pagename": "Создание сниппета"}
+        return render(request, 'pages/add_snippet.html', context)
 
     if request.method == 'POST':
         form = SnippetForm(request.POST)
         if form.is_valid():
             form.save()
-            # name = form.cleaned_data['name']
-            # lang = form.cleaned_data['lang']
-            # code = form.cleaned_data['code']
-            #
-            # Snippet.objects.create(name=name, lang=lang, code=code)
             return redirect('snippets-list')
         else:
-            return render(request, 'pages/add_snippet.html', {'form': form})
+            context = {'form': form, "pagename": "Создание сниппета"}
+            return render(request, 'pages/add_snippet.html', context)
 
 
 def snippets_page(request):
