@@ -5,7 +5,8 @@
                 <img src="/static/images/logo.png" width="32" height="32" alt="">
                 PythonBin
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
+                    aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarCollapse">
@@ -19,6 +20,27 @@
                         <a class="btn btn-outline-info" href="{% url 'snippets-list' %}">
                             Посмотреть сниппеты
                         </a>
+                    </li>
+                    <li>
+                        {% if request.user.is_authenticated %}
+                            <div style="color: white">Hello, {{ request.user.username }}</div>
+                            <a href="{% url 'logout' %}">Выйти</a>
+                        {% else %}
+                            <form action="{% url 'login' %}" method="post">
+                                {% csrf_token %}
+                                <input name="username" type="text" placeholder="username">
+                                <input name="password" type="password" placeholder="password">
+                                {% if errors %}
+                                    <ul style="color: red">
+                                        {% for error in errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+
+                                <input type="submit" value="login">
+                            </form>
+                        {% endif %}
                     </li>
                 </ul>
             </div>
