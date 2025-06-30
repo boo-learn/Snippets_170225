@@ -30,6 +30,7 @@
                         <th scope="col">ID</th>
                         <th scope="col">Название</th>
                         <th scope="col">Дата создания</th>
+                        <th scope="col">Автор</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -50,6 +51,9 @@
                                 </div>
                             </td>
                             <td>{{ snippet.creation_date }}</td>
+                            <td>
+                                {{ snippet.user }}
+                            </td>
                         </tr>
                     {% endfor %}
 

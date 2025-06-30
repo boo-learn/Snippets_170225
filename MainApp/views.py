@@ -5,6 +5,7 @@ from MainApp.models import Snippet
 from MainApp.forms import SnippetForm
 from MainApp.models import LANG_ICON
 from django.contrib import auth
+from django.contrib.auth.decorators import login_required
 
 
 def get_icon(lang):
@@ -16,6 +17,7 @@ def index_page(request):
     return render(request, 'pages/index.html', context)
 
 
+@login_required
 def add_snippet_page(request):
     if request.method == 'GET':
         form = SnippetForm()
@@ -25,7 +27,9 @@ def add_snippet_page(request):
     if request.method == 'POST':
         form = SnippetForm(request.POST)
         if form.is_valid():
-            form.save()
+            snippet = form.save(commit=False)
+            snippet.user = request.user
+            snippet.save()
             return redirect('snippets-list')
         else:
             context = {'form': form, "pagename": "Создание сниппета"}
