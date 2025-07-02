@@ -52,6 +52,11 @@
                             </td>
                             <td>{{ snippet.creation_date }}</td>
                             <td>
+                                {% if snippet.public %}
+                                    <i class="fa-solid fa-lock-open"></i>
+                                {% else %}
+                                    <i class="fa-solid fa-lock"></i>
+                                {% endif %}
                                 {{ snippet.user }}
                             </td>
                         </tr>
