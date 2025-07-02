@@ -1,6 +1,6 @@
 from django.http import Http404
 from django.shortcuts import render, redirect, get_object_or_404
-from django.db.models import F
+from django.db.models import F, Q
 from MainApp.models import Snippet
 from MainApp.forms import SnippetForm, UserRegistrationForm
 from MainApp.models import LANG_ICON
@@ -38,7 +38,12 @@ def add_snippet_page(request):
 
 
 def snippets_page(request):
-    snippets = Snippet.objects.all()
+    if not request.user.is_authenticated: # not auth: all public snippets
+        snippets = Snippet.objects.filter(public=True)
+    else: # auth:     all public snippets + OR self private snippets
+        snippets = Snippet.objects.filter(Q(public=True) | Q(public=False, user=request.user))
+
+
     for snippet in snippets:
         snippet.icon = get_icon(snippet.lang)
     context = {
