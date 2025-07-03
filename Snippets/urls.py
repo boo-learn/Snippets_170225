@@ -16,3 +16,8 @@ urlpatterns = [
     path('registration/', views.user_registration, name='registration'),
     path('comment/add', views.comment_add, name="comment_add"),
 ]
+
+# snippets/list
+# snippets/list?sort=name
+# snippets/list?sort=lang
+# snippets/list?sort=create_date
