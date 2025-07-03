@@ -1,11 +1,13 @@
 from django.http import Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import F, Q
-from MainApp.models import Snippet
-from MainApp.forms import SnippetForm, UserRegistrationForm
+from MainApp.models import Snippet, Comment
+from MainApp.forms import SnippetForm, UserRegistrationForm, CommentForm
 from MainApp.models import LANG_ICON
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
+
+
 # from django.contrib.auth.forms import UserCreationForm
 
 
@@ -38,11 +40,10 @@ def add_snippet_page(request):
 
 
 def snippets_page(request):
-    if not request.user.is_authenticated: # not auth: all public snippets
+    if not request.user.is_authenticated:  # not auth: all public snippets
         snippets = Snippet.objects.filter(public=True)
-    else: # auth:     all public snippets + OR self private snippets
+    else:  # auth:     all public snippets + OR self private snippets
         snippets = Snippet.objects.filter(Q(public=True) | Q(public=False, user=request.user))
-
 
     for snippet in snippets:
         snippet.icon = get_icon(snippet.lang)
@@ -68,8 +69,12 @@ def snippet_detail(request, id):
     snippet.views_count = F('views_count') + 1
     snippet.save(update_fields=['views_count'])
     snippet.refresh_from_db()
+    comments_form = CommentForm()
+    comments = Comment.objects.filter(snippet=snippet)
     context = {
-        "snippet": snippet
+        "snippet": snippet,
+        "comments_form": comments_form,
+        "comments": comments
     }
     return render(request, 'pages/snippet_detail.html', context)
 
@@ -141,3 +146,20 @@ def user_registration(request):
                 "user_form": user_form
             }
             return render(request, "pages/registration.html", context)
+
+
+def comment_add(request):
+   if request.method == "POST":
+      comment_form = CommentForm(request.POST)
+      snippet_id = request.POST.get('snippet_id') # Получаем ID сниппета из формы
+      snippet = get_object_or_404(Snippet, id=snippet_id)
+
+      if comment_form.is_valid():
+         comment = comment_form.save(commit=False)
+         comment.author = request.user # Текущий авторизованный пользователь
+         comment.snippet = snippet
+         comment.save()
+
+      return redirect('snippet-detail', id=snippet_id) # Предполагаем, что у вас есть URL для деталей сниппета с параметром pk
+
+   raise Http404

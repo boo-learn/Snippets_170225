@@ -13,5 +13,6 @@ urlpatterns = [
     path('snippet/<int:id>/edit', views.snippet_edit, name="snippet-edit"),
     path('login', views.login, name="login"),
     path('logout/', views.user_logout, name='logout'),
-    path('registration/', views.user_registration, name='registration')
+    path('registration/', views.user_registration, name='registration'),
+    path('comment/add', views.comment_add, name="comment_add"),
 ]

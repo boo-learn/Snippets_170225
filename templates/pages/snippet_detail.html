@@ -13,7 +13,8 @@
                             Дата создания:<input type="text" value="{{ snippet.creation_date }}" class="form-control">
                         </div>
                         <div class="col col-2">
-                            Счетчик просмотров:<input type="number" value="{{ snippet.views_count }}" class="form-control">
+                            Счетчик просмотров:<input type="number" value="{{ snippet.views_count }}"
+                                                      class="form-control">
                         </div>
                     </div>
                     <hr>
@@ -27,6 +28,38 @@
                         </div>
                     </div>
                 </fieldset>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <form action="{% url 'comment_add' %}" method="post">
+                    {% csrf_token %}
+                    {{ comments_form }}
+                    <input type="hidden" name="snippet_id" value="{{ snippet.id }}">
+                    <input type="submit" value="Комментировать">
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <table border="1">
+                    <tr>
+                        <th>Автор</th>
+                        <th>Комментарий</th>
+                        <th>Дата</th>
+                    </tr>
+                    {% for comment in comments %}
+                        <tr>
+                            <td>{{ comment.author.username }}</td>
+                            <td>{{ comment.text }}</td>
+                            <td>{{ comment.creation_date|date:"Y-m-d H:i" }}</td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="3">Пока нет комментариев. Будьте первым!</td>
+                        </tr>
+                    {% endfor %}
+                </table>
             </div>
         </div>
     </div>
