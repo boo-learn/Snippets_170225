@@ -1,4 +1,4 @@
-from django.http import Http404
+from django.http import Http404, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import F, Q
 from MainApp.models import Snippet, Comment
@@ -48,11 +48,27 @@ def add_snippet_page(request):
 # 3. сортировка Z-A
 
 # snippets/list?page=3
-def snippets_page(request):
-    if not request.user.is_authenticated:  # not auth: all public snippets
-        snippets = Snippet.objects.filter(public=True)
-    else:  # auth:     all public snippets + OR self private snippets
-        snippets = Snippet.objects.filter(Q(public=True) | Q(public=False, user=request.user))
+
+# @login_required
+# def snippets_my(request):
+#     snippets = Snippet.objects.filter(user=request.user)
+#     context = {
+#         'pagename': 'Мои сниппетов',
+#         'snippets': snippets,
+#     }
+#     return render(request, 'pages/view_snippets.html', context)
+
+
+def snippets_page(request, snippets_my):
+    if snippets_my:  # url: snippets/my
+        if not request.user.is_authenticated:
+            return HttpResponse('Unauthorized', status=401)
+        snippets = Snippet.objects.filter(user=request.user)
+    else:
+        if not request.user.is_authenticated:  # not auth: all public snippets
+            snippets = Snippet.objects.filter(public=True)
+        else:  # auth:     all public snippets + OR self private snippets
+            snippets = Snippet.objects.filter(Q(public=True) | Q(public=False, user=request.user))
 
     # sort
     sort = request.GET.get("sort")
@@ -72,16 +88,6 @@ def snippets_page(request):
         'pagename': 'Просмотр сниппетов',
         'page_obj': page_obj,
         'sort': sort
-    }
-    return render(request, 'pages/view_snippets.html', context)
-
-
-@login_required
-def snippets_my(request):
-    snippets = Snippet.objects.filter(user=request.user)
-    context = {
-        'pagename': 'Мои сниппетов',
-        'snippets': snippets,
     }
     return render(request, 'pages/view_snippets.html', context)
 
