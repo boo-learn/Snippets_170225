@@ -39,7 +39,18 @@
                                 <a href="?sort=name">Название</a>
                             {% endif %}
                         </th>
-                        <th scope="col">Дата создания</th>
+                        <th scope="col">
+
+                            {% if sort == "creation_date" %}
+                                <a href="?sort=-creation_date">Дата создания</a>
+                                <i class="fa-solid fa-arrow-up-a-z"></i>
+                            {% elif sort == "-creation_date" %}
+                                <a href="?sort=creation_date">Дата создания</a>
+                                <i class="fa-solid fa-arrow-up-z-a"></i>
+                            {% else %}
+                                <a href="?sort=creation_date">Дата создания</a>
+                            {% endif %}
+                        </th>
                         <th scope="col">Автор</th>
                     </tr>
                     </thead>
@@ -67,7 +78,7 @@
                                 {% else %}
                                     <i class="fa-solid fa-lock"></i>
                                 {% endif %}
-                                {{ snippet.user }}
+                                {{ snippet.user | default:"Аноним" }}
                             </td>
                         </tr>
                     {% endfor %}
