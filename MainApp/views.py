@@ -6,6 +6,7 @@ from MainApp.forms import SnippetForm, UserRegistrationForm, CommentForm
 from MainApp.models import LANG_ICON
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 
 
 # from django.contrib.auth.forms import UserCreationForm
@@ -45,8 +46,9 @@ def add_snippet_page(request):
 # 1. Нет сортировки
 # 2. сортировка A-Z
 # 3. сортировка Z-A
-def snippets_page(request):
 
+# snippets/list?page=3
+def snippets_page(request):
     if not request.user.is_authenticated:  # not auth: all public snippets
         snippets = Snippet.objects.filter(public=True)
     else:  # auth:     all public snippets + OR self private snippets
@@ -59,9 +61,16 @@ def snippets_page(request):
 
     for snippet in snippets:
         snippet.icon = get_icon(snippet.lang)
+
+    # pagination
+    paginator = Paginator(snippets, 5)
+    num_page = request.GET.get("page")
+    page_obj = paginator.get_page(num_page)
+    # TODO: работает или пагинация или сортировка, но не вместе
+
     context = {
         'pagename': 'Просмотр сниппетов',
-        'snippets': snippets,
+        'page_obj': page_obj,
         'sort': sort
     }
     return render(request, 'pages/view_snippets.html', context)
@@ -164,17 +173,18 @@ def user_registration(request):
 
 
 def comment_add(request):
-   if request.method == "POST":
-      comment_form = CommentForm(request.POST)
-      snippet_id = request.POST.get('snippet_id') # Получаем ID сниппета из формы
-      snippet = get_object_or_404(Snippet, id=snippet_id)
+    if request.method == "POST":
+        comment_form = CommentForm(request.POST)
+        snippet_id = request.POST.get('snippet_id')  # Получаем ID сниппета из формы
+        snippet = get_object_or_404(Snippet, id=snippet_id)
 
-      if comment_form.is_valid():
-         comment = comment_form.save(commit=False)
-         comment.author = request.user # Текущий авторизованный пользователь
-         comment.snippet = snippet
-         comment.save()
+        if comment_form.is_valid():
+            comment = comment_form.save(commit=False)
+            comment.author = request.user  # Текущий авторизованный пользователь
+            comment.snippet = snippet
+            comment.save()
 
-      return redirect('snippet-detail', id=snippet_id) # Предполагаем, что у вас есть URL для деталей сниппета с параметром pk
+        return redirect('snippet-detail',
+                        id=snippet_id)  # Предполагаем, что у вас есть URL для деталей сниппета с параметром pk
 
-   raise Http404
+    raise Http404
