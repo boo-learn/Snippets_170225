@@ -1,12 +1,13 @@
 from django.http import Http404, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import F, Q
-from MainApp.models import Snippet, Comment
+from MainApp.models import Snippet, Comment, LANG_CHOICES
 from MainApp.forms import SnippetForm, UserRegistrationForm, CommentForm
 from MainApp.models import LANG_ICON
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
+from django.contrib.auth.models import User
 
 
 # from django.contrib.auth.forms import UserCreationForm
@@ -49,6 +50,8 @@ def add_snippet_page(request):
 
 # snippets/list?page=3
 
+# /snippets/my?lang=python&user_id=1
+
 # @login_required
 # def snippets_my(request):
 #     snippets = Snippet.objects.filter(user=request.user)
@@ -70,6 +73,14 @@ def snippets_page(request, snippets_my):
         else:  # auth:     all public snippets + OR self private snippets
             snippets = Snippet.objects.filter(Q(public=True) | Q(public=False, user=request.user))
 
+    # filter
+    lang = request.GET.get("lang")
+    if lang:
+        snippets = snippets.filter(lang=lang)
+    user_id = request.GET.get("user_id")
+    if user_id:
+        snippets = snippets.filter(user__id=user_id)
+
     # sort
     sort = request.GET.get("sort")
     if sort:
@@ -87,7 +98,10 @@ def snippets_page(request, snippets_my):
     context = {
         'pagename': 'Просмотр сниппетов',
         'page_obj': page_obj,
-        'sort': sort
+        'sort': sort,
+        'lang': lang,
+        'LANG_CHOICES': LANG_CHOICES,
+        'users': User.objects.all()
     }
     return render(request, 'pages/view_snippets.html', context)
 
