@@ -13,10 +13,6 @@ from django.contrib.auth.models import User
 # from django.contrib.auth.forms import UserCreationForm
 
 
-def get_icon(lang):
-    return LANG_ICON.get(lang)
-
-
 def index_page(request):
     context = {'pagename': 'PythonBin'}
     return render(request, 'pages/index.html', context)
@@ -86,14 +82,10 @@ def snippets_page(request, snippets_my):
     if sort:
         snippets = snippets.order_by(sort)
 
-    for snippet in snippets:
-        snippet.icon = get_icon(snippet.lang)
-
     # pagination
     paginator = Paginator(snippets, 5)
     num_page = request.GET.get("page")
     page_obj = paginator.get_page(num_page)
-    # TODO: работает или пагинация или сортировка, но не вместе
 
     context = {
         'pagename': 'Просмотр сниппетов',

@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load my_tags %}
 {% block style %}
     {{ block.super }}
     <style>
@@ -102,7 +103,7 @@
                         <tr>
                             <td scope="row">{{ snippet.id }}</td>
                             <td class="snippet">
-                                <i class="{{ snippet.icon }}"></i>
+                                <i class="{{ snippet.lang | get_class_icon }}"></i>
                                 <a href="{% url 'snippet-detail' snippet.id %}">{{ snippet.name }}</a>
                                 <div class="hidden">
                                     <a href="{% url 'snippet-delete' snippet.id %}">
