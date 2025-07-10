@@ -24,6 +24,7 @@
 
         <div class="row">
             <div class="col">
+                {#  форма с фильтрами #}
                 <form action="" method="get">
                     <div class="d-flex flex-wrap align-items-end gap-3 mb-3">
 
@@ -68,13 +69,16 @@
                         <th scope="col">ID</th>
                         <th scope="col">
                             {% if sort == "name" %}
-                                <a href="?sort=-name">Название</a>
+{#                                <a href="?sort=-name">Название</a>#}
+                                <a href="{% querystring sort='-name' %}">Название</a>
                                 <i class="fa-solid fa-arrow-up-a-z"></i>
                             {% elif sort == "-name" %}
-                                <a href="?sort=name">Название</a>
+{#                                <a href="?sort=name">Название</a>#}
+                                <a href="{% querystring sort='name' %}">Название</a>
                                 <i class="fa-solid fa-arrow-up-z-a"></i>
                             {% else %}
-                                <a href="?sort=name">Название</a>
+{#                                <a href="?sort=name">Название</a>#}
+                                <a href="{% querystring sort='name' %}">Название</a>
                             {% endif %}
                         </th>
                         <th scope="col">
@@ -138,7 +142,8 @@
                             {# Ссылка на предыдущую страницу #}
                             <li class="page-item {% if not page_obj.has_previous %}disabled{% endif %}">
                                 <a class="page-link"
-                                   {% if page_obj.has_previous %}href="?page={{ page_obj.previous_page_number }}"{% endif %}
+{#                                   {% if page_obj.has_previous %}href="?page={{ page_obj.previous_page_number }}"{% endif %}#}
+                                   {% if page_obj.has_previous %}href="{% querystring page=page_obj.previous_page_number %}"{% endif %}
                                    tabindex="-1" aria-disabled="true">Предыдущая</a>
                             </li>
 
@@ -146,11 +151,12 @@
                             {% for num in page_obj.paginator.page_range %}
                                 {% if page_obj.number == num %}
                                     <li class="page-item active" aria-current="page">
-                                        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+{#                                        <a class="page-link" href="?page={{ num }}">{{ num }}</a>#}
+                                        <a class="page-link" href="{% querystring page=num %}">{{ num }}</a>
                                     </li>
                                 {% else %}
                                     <li class="page-item">
-                                        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                                        <a class="page-link" href="{% querystring page=num %}">{{ num }}</a>
                                     </li>
                                 {% endif %}
                             {% endfor %}
@@ -158,7 +164,8 @@
                             {# Ссылка на следующую страницу #}
                             <li class="page-item {% if not page_obj.has_next %}disabled{% endif %}">
                                 <a class="page-link"
-                                   {% if page_obj.has_next %}href="?page={{ page_obj.next_page_number }}"{% endif %}>Следующая</a>
+{#                                   {% if page_obj.has_next %}href="?page={{ page_obj.next_page_number }}"{% endif %}>Следующая</a>#}
+                                   {% if page_obj.has_next %}href="{% querystring page=page_obj.next_page_number %}"{% endif %}>Следующая</a>
                             </li>
 
                         </ul>
