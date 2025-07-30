@@ -17,6 +17,9 @@ LANG_ICON = {
 class Tag(models.Model):
     name = models.CharField(max_length=20)
 
+    def __str__(self):
+        return f"Tag: {self.name}"
+
 
 class Snippet(models.Model):
     name = models.CharField(max_length=100)  # -> input
