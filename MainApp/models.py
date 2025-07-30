@@ -14,6 +14,9 @@ LANG_ICON = {
     "java": "fa-brands fa-java",
 }
 
+class Tag(models.Model):
+    name = models.CharField(max_length=20)
+
 
 class Snippet(models.Model):
     name = models.CharField(max_length=100)  # -> input
@@ -22,8 +25,8 @@ class Snippet(models.Model):
     creation_date = models.DateTimeField(auto_now=True)
     views_count = models.PositiveIntegerField(default=0)
     public = models.BooleanField(default=True)
-    user = models.ForeignKey(to=User, on_delete=models.CASCADE,
-                             blank=True, null=True)
+    user = models.ForeignKey(to=User, on_delete=models.CASCADE, blank=True, null=True)
+    tags = models.ManyToManyField(to=Tag)
 
     def __repr__(self):
         return f"S: {self.name}|{self.lang} views:{self.views_count} public:{self.public} user:{self.user}"
