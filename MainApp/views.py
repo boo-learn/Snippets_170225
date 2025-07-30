@@ -48,15 +48,7 @@ def add_snippet_page(request):
 
 # /snippets/my?lang=python&user_id=1
 
-# @login_required
-# def snippets_my(request):
-#     snippets = Snippet.objects.filter(user=request.user)
-#     context = {
-#         'pagename': 'Мои сниппетов',
-#         'snippets': snippets,
-#     }
-#     return render(request, 'pages/view_snippets.html', context)
-
+# /snippets/list?tag=basic
 
 def snippets_page(request, snippets_my):
     if snippets_my:  # url: snippets/my
@@ -82,6 +74,10 @@ def snippets_page(request, snippets_my):
     if sort:
         snippets = snippets.order_by(sort)
 
+    # tag
+    tag = request.GET.get("tag")
+    if tag:
+        snippets = snippets.filter(tags__name=tag)
     # pagination
     paginator = Paginator(snippets, 5)
     num_page = request.GET.get("page")

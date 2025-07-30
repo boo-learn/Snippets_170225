@@ -32,7 +32,9 @@
             <div class="col-2">
                 <h5>Теги:</h5>
                 {% for tag in snippet.tags.all %}
-                	<span class="badge bg-primary me-2 mb-1">{{ tag.name }}</span>
+                    <a href="/snippets/list?tag={{ tag.name }}">
+                        <span class="badge bg-primary me-2 mb-1">{{ tag.name }}</span>
+                    </a>
                 {% endfor %}
             </div>
         </div>
