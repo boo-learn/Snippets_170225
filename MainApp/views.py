@@ -1,3 +1,4 @@
+import logging
 from django.http import Http404, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import F, Q
@@ -12,6 +13,7 @@ from django.contrib import messages
 from MainApp.signals import snippet_view
 
 # from django.contrib.auth.forms import UserCreationForm
+logger = logging.getLogger(__name__)
 
 # error -> danger
 # debug -> dark
@@ -41,6 +43,7 @@ def add_snippet_page(request):
             return redirect('snippets-list')
         else:
             context = {'form': form, "pagename": "Создание сниппета"}
+            messages.error(request, f"Форма заполнена неверно")
             return render(request, 'pages/add_snippet.html', context)
 
 
@@ -167,6 +170,12 @@ def user_logout(request):
 
 def user_registration(request):
     if request.method == "GET":
+        logger.debug("Это отладочное сообщение.")
+        logger.info("Пользователь посетил страницу.")
+        logger.warning("Возможно, что-то пошло не так.")
+        logger.error("Произошла ошибка!")
+        logger.critical("Приложение в критическом состоянии!")
+
         user_form = UserRegistrationForm()
         context = {
             "user_form": user_form

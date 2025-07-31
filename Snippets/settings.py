@@ -27,6 +27,51 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+LOGGING = {
+'version': 1,
+'disable_existing_loggers': False,
+
+'formatters': {
+    'verbose': {
+        'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
+        'style': '{',
+    },
+    'simple': {
+        'format': '{levelname} {message}',
+        'style': '{',
+    },
+},
+
+'handlers': {
+    'file': {
+        'level': 'DEBUG',
+        'class': 'logging.handlers.RotatingFileHandler',
+        'filename': BASE_DIR / 'django_debug.log',
+        'maxBytes': 1024 * 1024 * 5,  # 5 MB
+        'backupCount': 5,
+        'formatter': 'verbose',
+    },
+    'console': {
+        'level': 'INFO',
+        'class': 'logging.StreamHandler',
+        'formatter': 'simple',
+    },
+},
+
+'loggers': {
+    'django': {
+        'handlers': ['console'],
+        'level': 'INFO',
+        'propagate': False,
+    },
+    'MainApp': {
+        'handlers': ['file'],
+        'level': 'DEBUG',
+        'propagate': False,
+    },
+},
+}
+
 # LOGGING = {
 #     'version': 1,
 #     'disable_existing_loggers': False,  # Не отключаем существующие логгеры
