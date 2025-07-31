@@ -8,13 +8,20 @@ from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.contrib.auth.models import User
+from django.contrib import messages
 
 
 # from django.contrib.auth.forms import UserCreationForm
 
-
+# error -> danger
+# debug -> dark
 def index_page(request):
     context = {'pagename': 'PythonBin'}
+    # messages.success(request, "1. Успешное!")
+    # messages.info(request, "2. Информационное!")
+    # messages.warning(request, "3. Предупреждение!")
+    # messages.error(request, "4. Ошибка!")
+    # messages.debug(request, "5. Отладка!")
     return render(request, 'pages/index.html', context)
 
 
@@ -171,7 +178,8 @@ def user_registration(request):
     if request.method == "POST":
         user_form = UserRegistrationForm(request.POST)
         if user_form.is_valid():
-            user_form.save()
+            user = user_form.save()
+            messages.success(request, f"Пользователь {user.username} успешно зарегистрирован")
             return redirect("home")
         else:
             context = {
