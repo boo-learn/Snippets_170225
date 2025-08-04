@@ -15,6 +15,7 @@ from MainApp.signals import snippet_view
 # from django.contrib.auth.forms import UserCreationForm
 logger = logging.getLogger(__name__)
 
+
 # error -> danger
 # debug -> dark
 def index_page(request):
@@ -94,7 +95,7 @@ def snippets_page(request, snippets_my):
     page_obj = paginator.get_page(num_page)
 
     context = {
-        'pagename': 'Просмотр сниппетов',
+        'pagename': 'Мои сниппеты' if snippets_my else 'Просмотр сниппетов',
         'page_obj': page_obj,
         'sort': sort,
         'lang': lang,
