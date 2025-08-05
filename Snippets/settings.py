@@ -194,3 +194,8 @@ STATICFILES_DIRS = [
     BASE_DIR / "static"
 ]
 STATIC_ROOT = BASE_DIR / "staticfiles"
+
+# Django Extensions Shell Plus Configuration
+SHELL_PLUS_PRE_IMPORTS = [
+    ('MainApp.factories', ('UserFactory', 'TagFactory', 'SnippetFactory', 'CommentFactory')),
+]
