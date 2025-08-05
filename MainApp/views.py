@@ -11,6 +11,7 @@ from django.core.paginator import Paginator
 from django.contrib.auth.models import User
 from django.contrib import messages
 from MainApp.signals import snippet_view
+from django.http import HttpResponseForbidden
 
 # from django.contrib.auth.forms import UserCreationForm
 logger = logging.getLogger(__name__)
@@ -108,11 +109,14 @@ def snippets_page(request, snippets_my):
 def snippet_detail(request, id):
     # snippet = get_object_or_404(Snippet, id=id)
     snippet = Snippet.objects.prefetch_related("comments").get(id=id)
+    if snippet.user != request.user and snippet.public is False:
+        return HttpResponseForbidden("You are not authorized to access this page.")
     snippet_view.send(sender=None, snippet=snippet)
     comments_form = CommentForm()
     # comments = Comment.objects.filter(snippet=snippet)
     comments = snippet.comments.all()
     context = {
+        'pagename': f'Сниппет: {snippet.name}',
         "snippet": snippet,
         "comments_form": comments_form,
         "comments": comments
