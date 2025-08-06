@@ -200,6 +200,7 @@ def user_registration(request):
             return render(request, "pages/registration.html", context)
 
 
+@login_required
 def comment_add(request):
     if request.method == "POST":
         comment_form = CommentForm(request.POST)

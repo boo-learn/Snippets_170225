@@ -647,7 +647,7 @@ class TestSnippetDetail:
     def test_snippet_detail_with_tags(self):
         """Тест просмотра сниппета с тегами"""
         # Создаем теги через фабрику
-        from .factories import TagFactory
+        from MainApp.factories import TagFactory
         python_tag = TagFactory(name='python')
         django_tag = TagFactory(name='django')
         web_tag = TagFactory(name='web')
