@@ -236,3 +236,62 @@ def test_snippets_my_page_access_and_content(browser, live_server):
     page_content = browser.find_element(By.TAG_NAME, "body").text
     assert "Мои сниппеты" in page_content, \
         "На странице должна быть информация о том, что это страница 'Мои сниппеты'"
+
+from selenium.webdriver.support.ui import Select
+
+@pytest.mark.django_db
+def test_page_snippet_add(browser, live_server):
+    # 1. создать пользователя
+    user = UserFactory()
+    # 2. авторизироватся
+    browser.get(f"{live_server.url}{reverse('home')}")
+
+    auth_dropdown = browser.find_element(By.ID, "navbarDropdown")
+    auth_dropdown.click()
+
+    # Ждем появления формы авторизации
+    WebDriverWait(browser, 10).until(
+        EC.visibility_of_element_located((By.CSS_SELECTOR, 'input[name="username"]'))
+    )
+
+    # Заполняем форму авторизации
+    username_input = browser.find_element(By.CSS_SELECTOR, 'input[name="username"]')
+    password_input = browser.find_element(By.CSS_SELECTOR, 'input[name="password"]')
+
+    username_input.send_keys(user.username)
+    password_input.send_keys("defaultpassword")
+
+    # Отправляем форму
+    login_form = browser.find_element(By.CSS_SELECTOR, "form[action*='login']")
+    login_form.submit()
+
+    # Ждем перенаправления на главную страницу
+    WebDriverWait(browser, 10).until(
+        EC.url_to_be(f"{live_server.url}{reverse('home')}")
+    )
+
+    # 3. Перейти на страницу "Создание сниппетов"
+    browser.get(f"{live_server.url}{reverse('snippet-add')}")
+    WebDriverWait(browser, 10).until(
+        EC.visibility_of_element_located((By.TAG_NAME, 'form'))
+    )
+    # 4. Заполнить поля формы "Соз. сниппета"
+    name_input = browser.find_element(By.CSS_SELECTOR, 'input[name="name"]')
+    lang_input = browser.find_element(By.CSS_SELECTOR, 'select[name="lang"]')
+    code_input = browser.find_element(By.CSS_SELECTOR, 'textarea[name="code"]')
+    form = browser.find_element(By.TAG_NAME, 'form')
+
+    name_input.send_keys("Test snippet")
+    select = Select(lang_input)
+    select.select_by_value("python")
+    code_input.send_keys("Snippet code")
+    # 5. Отправить форму Сниппета
+    form.submit()
+    # 6. Перейти на страницу "Мои сниппеты"
+    browser.get(f"{live_server.url}{reverse('snippets-my')}")
+    WebDriverWait(browser, 10).until(
+        EC.visibility_of_element_located((By.TAG_NAME, 'body'))
+    )
+    # 5. проверить создался ли сниппет
+    snippet_name = browser.find_element(By.CSS_SELECTOR, f"td[class='snippet']")
+    assert snippet_name is not None
