@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="first">Текст-1</div>
+<div>Текст-2</div>
+<ul>
+   <li class="list-item">Первый</li>
+   <li class="list-item">Второй</li>
+   <li class="list-item">Третий</li>
+</ul>
+<button id="my-button">OK</button>
+<script>
+    const button = document.querySelector('#my-button');
+    function onClick(){
+        console.log("Кнопка нажата!");
+    }
+
+    button.addEventListener('click', onClick);
+</script>
+</body>
+</html>
