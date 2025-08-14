@@ -5,21 +5,19 @@
     <title>Title</title>
 </head>
 <body>
-<div id="first">Текст-1</div>
-<div>Текст-2</div>
-<ul>
-   <li class="list-item">Первый</li>
-   <li class="list-item">Второй</li>
-   <li class="list-item">Третий</li>
-</ul>
-<button id="my-button">OK</button>
-<script>
-    const button = document.querySelector('#my-button');
-    function onClick(){
-        console.log("Кнопка нажата!");
-    }
+<p onmouseover="changeColor(this)">Наведи на меня</p>
+<p onmouseover="changeColor(this)">Наведи на меня</p>
+<p onmouseover="changeColor(this)">Наведи на меня</p>
+<p onmouseover="changeColor(this)">Наведи на меня</p>
+<p onmouseover="changeColor(this)">Наведи на меня</p>
+<p onmouseover="changeColor(this)">Наведи на меня</p>
+<p onmouseover="changeColor(this)">Наведи на меня</p>
+<p onmouseover="changeColor(this)">Наведи на меня</p>
 
-    button.addEventListener('click', onClick);
+<script>
+   function changeColor(element) {
+       element.style.color = 'red';
+   }
 </script>
 </body>
 </html>
