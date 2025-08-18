@@ -21,9 +21,9 @@ logger = logging.getLogger(__name__)
 # debug -> dark
 def index_page(request):
     context = {'pagename': 'PythonBin'}
-    messages.success(request, "1. Успешное!")
-    messages.info(request, "2. Информационное!")
-    messages.warning(request, "3. Предупреждение!")
+    # messages.success(request, "1. Успешное!")
+    # messages.info(request, "2. Информационное!")
+    # messages.warning(request, "3. Предупреждение!")
     return render(request, 'pages/index.html', context)
 
 
