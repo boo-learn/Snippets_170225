@@ -2,9 +2,8 @@ import logging
 from django.http import Http404, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import F, Q
-from MainApp.models import Snippet, Comment, LANG_CHOICES
+from MainApp.models import Snippet, Comment, LANG_CHOICES, Notification
 from MainApp.forms import SnippetForm, UserRegistrationForm, CommentForm
-from MainApp.models import LANG_ICON
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
@@ -215,3 +214,19 @@ def comment_add(request):
                         id=snippet_id)  # Предполагаем, что у вас есть URL для деталей сниппета с параметром pk
 
     raise Http404
+
+
+@login_required
+def user_notifications(request):
+    """Страница с уведомлениями пользователя"""
+
+    # Получаем все уведомления для авторизованного пользователя, сортируем по дате создания
+    notifications = Notification.objects.filter(recipient=request.user)
+    # Отмечаем все уведомления как прочитанные при переходе на страницу
+    notifications.update(is_read=True)
+
+    context = {
+        'pagename': 'Мои уведомления',
+        'notifications': notifications
+    }
+    return render(request, 'pages/notifications.html', context)

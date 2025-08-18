@@ -73,6 +73,14 @@
                             </li>
                         {% endif %}
                     </li>
+                    {% if request.user.is_authenticated %}
+                        <li class="ps-3">
+                            <a class="btn btn-outline-warning" href="{% url 'notifications' %}">
+                                <i class="fas fa-bell"></i> Уведомления
+                                <span id="notification-count" class="badge bg-danger ms-1">0</span>
+                            </a>
+                        </li>
+                    {% endif %}
                     {% if not request.user.is_authenticated %}
                         <li>
                             <a href="{% url 'registration' %}" class="btn btn-success">Регистрация</a>

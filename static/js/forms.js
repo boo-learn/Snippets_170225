@@ -25,8 +25,8 @@ function loadDraft(){
     const data = localStorage.getItem(formDataKey);
     if (!data) return;
 
-    let restore = confirm("Восстановить данные формы?");
-    if (!restore) return;
+    // let restore = confirm("Восстановить данные формы?");
+    // if (!restore) return;
 
     const formData = JSON.parse(data);
     name.value = formData.name;
