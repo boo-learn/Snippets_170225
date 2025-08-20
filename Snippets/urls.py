@@ -18,6 +18,7 @@ urlpatterns = [
     path('comment/add', views.comment_add, name="comment_add"),
     path('admin/', admin.site.urls),
     path('notifications/', views.user_notifications, name="notifications"),
+    path('api/notifications/unread-count/', views.unread_notifications_count, name='unread_notifications_count'),
 ]
 
 # snippets/list
