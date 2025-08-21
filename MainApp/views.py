@@ -284,3 +284,11 @@ def unread_notifications_count(request):
         'unread_count': 0,
         'timestamp': str(datetime.now())
     })
+
+def comment_like(request):
+    if request.method == 'POST':
+        import json
+        data = json.loads(request.body)
+        snippet = Snippet.objects.get(id=data.get("comment_id"))
+        vote = data.get("vote")
+        user = request.user

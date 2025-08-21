@@ -54,36 +54,80 @@
                 {% endfor %}
             </div>
         </div>
-        <div class="row">
-            <div class="col">
-                <form action="{% url 'comment_add' %}" method="post">
-                    {% csrf_token %}
-                    {{ comments_form }}
-                    <input type="hidden" name="snippet_id" value="{{ snippet.id }}">
-                    <input type="submit" value="Комментировать">
-                </form>
+       {#  Форма добавления комментария  #}
+        <div class="row mt-4">
+            <div class="col-8">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5>Оставить комментарий</h5>
+                    </div>
+                    <div class="card-body">
+                        <form action="{% url 'comment_add' %}" method="POST">
+                            <div class="mb-3">
+                                {% csrf_token %}
+                                {{ comments_form.text }}
+                                <input type="hidden" name="snippet_id" value="{{ snippet.id }}">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Отправить комментарий</button>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
+        {# Всего комментариев  #}
         <div class="row">
-            <div class="col">
-                <table border="1">
-                    <tr>
-                        <th>Автор</th>
-                        <th>Комментарий</th>
-                        <th>Дата</th>
-                    </tr>
+            <div class="col-8">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="mb-0">Всего комментариев: <span class="badge bg-secondary">{{ comments | length }}</span>
+                    </h5>
+                    <button class="btn btn-outline-secondary btn-sm">
+                        <i class="fa-solid fa-arrow-up-short-wide"></i>
+                        Сортировка
+                    </button>
+                </div>
+            </div>
+        </div>
+        {#  Отображение комментариев #}
+        <div class="row mt-4">
+            <div class="col-8">
+                <ul class="list-group mb-3">
                     {% for comment in comments %}
-                        <tr>
-                            <td>{{ comment.author.username }}</td>
-                            <td>{{ comment.text }}</td>
-                            <td>{{ comment.creation_date|date:"Y-m-d H:i" }}</td>
-                        </tr>
+                        <li class="list-group-item d-flex align-items-start">
+                            <div class="w-100">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1">{{ comment.author }}</h5>
+                                    <small class="text-muted">{{ comment.creation_date | date:"j E Y г. в H:i" }}</small>
+                                </div>
+                                <p class="mb-1">
+                                    {{ comment.text }}
+                                </p>
+                                <small>
+                                    <a href="#" class="text-decoration-none me-2">Ответить</a>
+                                    <div class="d-inline-flex align-items-center me-3">
+{#                                        <a href="#" onclick="voteComment({{ comment.id }}, 1)">#}
+                                            <button onclick="voteComment({{ comment.id }}, 1)" class="btn btn-sm btn-outline-success me-1"
+                                                    title="Лайк">
+                                                <i class="fa-regular fa-thumbs-up"></i>
+                                            </button>
+{#                                        </a>#}
+                                        <span class="badge bg-success me-2">{{ comment.likes_count }}</span>
+{#                                        <a href="#" onclick="voteComment({{ comment.id }}, -1)">#}
+                                            <button onclick="voteComment({{ comment.id }}, -1)" class="btn btn-sm btn-outline-danger me-1"
+                                                    title="Дизлайк">
+                                                <i class="fa-solid fa-thumbs-down"></i>
+                                            </button>
+{#                                        </a>#}
+                                        <span class="badge bg-danger">{{ comment.dislikes_count }}</span>
+                                    </div>
+                                </small>
+                            </div>
+                        </li>
                     {% empty %}
-                        <tr>
-                            <td colspan="3">Пока нет комментариев. Будьте первым!</td>
-                        </tr>
+                        <li class="list-group-item d-flex align-items-start">
+                            Пока нет комментариев. Будьте первым!
+                        </li>
                     {% endfor %}
-                </table>
+                </ul>
             </div>
         </div>
     </div>
@@ -91,4 +135,6 @@
 {% block script %}
     {{ block.super }}
     <script src="{% static 'js/utils.js' %}"></script>
+    <script src="{% static 'js/like_dislike.js' %}"></script>
+
 {% endblock %}
