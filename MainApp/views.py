@@ -223,9 +223,9 @@ def user_notifications(request):
     """Страница с уведомлениями пользователя"""
 
     # Получаем все уведомления для авторизованного пользователя, сортируем по дате создания
-    notifications = Notification.objects.filter(recipient=request.user)
+    notifications = list(Notification.objects.filter(recipient=request.user))
     # Отмечаем все уведомления как прочитанные при переходе на страницу
-    notifications.update(is_read=True)
+    Notification.objects.filter(recipient=request.user).update(is_read=True)
 
     context = {
         'pagename': 'Мои уведомления',

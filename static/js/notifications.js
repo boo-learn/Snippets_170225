@@ -9,11 +9,15 @@ let isPolling = false;
 let pollingInterval = null;
 let notificationCounter = document.getElementById('notification-count');
 let lastCount = 0;
+let isAuth = document.getElementById('isAuth').innerHTML; // 'true'/'false'
+
+console.log(`isAuth=${isAuth}`);
 
 const BASE_URL = '/api/notifications/unread-count/';
 
 // Функция для запуска polling
 function startPolling() {
+    if (isAuth === 'false') return;
     if (isPolling) return;
     isPolling = true;
     poll();
