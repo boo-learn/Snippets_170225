@@ -14,6 +14,8 @@ urlpatterns = [
     path('snippet/<int:id>/edit', views.snippet_edit, name="snippet-edit"),
     path('login', views.login, name="login"),
     path('logout/', views.user_logout, name='logout'),
+    path('profile/', views.user_profile, name="profile"),
+    path('profile/edit/', views.edit_profile, name="edit-profile"),
     path('registration/', views.user_registration, name='registration'),
     path('comment/add', views.comment_add, name="comment_add"),
     path('admin/', admin.site.urls),

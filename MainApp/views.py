@@ -235,6 +235,7 @@ def user_notifications(request):
     }
     return render(request, 'pages/notifications.html', context)
 
+
 # 0
 # --> api/notifications/unread-count?last_count=0
 # 1
@@ -287,6 +288,7 @@ def unread_notifications_count(request):
         'timestamp': str(datetime.now())
     })
 
+
 def add_commen_like(request):
     if request.method == 'POST':
         data = json.loads(request.body)
@@ -317,3 +319,11 @@ def add_commen_like(request):
         }
 
         return JsonResponse(response_data)
+
+
+def user_profile(request):
+    return render(request, 'pages/user_profile.html')
+
+
+def edit_profile(request):
+    pass
