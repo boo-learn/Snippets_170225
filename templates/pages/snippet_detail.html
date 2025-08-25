@@ -35,7 +35,8 @@
                     <hr>
                     <div class="row">
                         <div class="col">
-                            <div  class="p-2 h-100" style="position:relative;border:1px solid #ced4da; border-radius:5px;">
+                            <div class="p-2 h-100"
+                                 style="position:relative;border:1px solid #ced4da; border-radius:5px;">
                                 <div class="copy-button" onclick="copyToBuffer(`{{ snippet.code }}`)"> Copy</div>
                                 <p>
                                     {{ snippet.code }}
@@ -54,7 +55,7 @@
                 {% endfor %}
             </div>
         </div>
-       {#  Форма добавления комментария  #}
+        {#  Форма добавления комментария  #}
         <div class="row mt-4">
             <div class="col-8">
                 <div class="card mb-4">
@@ -92,7 +93,7 @@
             <div class="col-8">
                 <ul class="list-group mb-3">
                     {% for comment in comments %}
-                        <li class="list-group-item d-flex align-items-start">
+                        <li id="{{ comment.id }}" class="list-group-item d-flex align-items-start">
                             <div class="w-100">
                                 <div class="d-flex w-100 justify-content-between">
                                     <h5 class="mb-1">{{ comment.author }}</h5>
@@ -103,20 +104,29 @@
                                 </p>
                                 <small>
                                     <a href="#" class="text-decoration-none me-2">Ответить</a>
+                                    {#                                    <a href="#" class="text-decoration-none me-2">#}
+                                    {#                                        <i class="fa-regular fa-thumbs-up"></i>#}
+                                    {#                                    </a>#}
+                                    {#                                    <a href="#" class="text-decoration-none">#}
+                                    {#                                        <i class="fa-solid fa-thumbs-down"></i>#}
+                                    {#                                    </a>#}
                                     <div class="d-inline-flex align-items-center me-3">
-{#                                        <a href="#" onclick="voteComment({{ comment.id }}, 1)">#}
-                                            <button onclick="voteComment({{ comment.id }}, 1)" class="btn btn-sm btn-outline-success me-1"
+                                        {#                                        <a href="{% url 'comment-like' comment.id %}">#}
+                                        <a href="#" onclick="voteComment(event,{{ comment.id }}, 1)">
+                                            <button class="btn btn-sm btn-outline-success me-1"
                                                     title="Лайк">
                                                 <i class="fa-regular fa-thumbs-up"></i>
                                             </button>
-{#                                        </a>#}
+                                        </a>
                                         <span class="badge bg-success me-2">{{ comment.likes_count }}</span>
-{#                                        <a href="#" onclick="voteComment({{ comment.id }}, -1)">#}
-                                            <button onclick="voteComment({{ comment.id }}, -1)" class="btn btn-sm btn-outline-danger me-1"
+
+                                        {#                                        <a href="{% url 'comment-dislike' comment.id %}">#}
+                                        <a href="#" onclick="voteComment(event,{{ comment.id }}, -1)">
+                                            <button class="btn btn-sm btn-outline-danger me-1"
                                                     title="Дизлайк">
                                                 <i class="fa-solid fa-thumbs-down"></i>
                                             </button>
-{#                                        </a>#}
+                                        </a>
                                         <span class="badge bg-danger">{{ comment.dislikes_count }}</span>
                                     </div>
                                 </small>

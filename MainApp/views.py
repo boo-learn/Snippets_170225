@@ -1,10 +1,12 @@
+import json
 import logging
 from datetime import datetime
 
+from django.contrib.contenttypes.models import ContentType
 from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import F, Q
-from MainApp.models import Snippet, Comment, LANG_CHOICES, Notification
+from MainApp.models import Snippet, Comment, LANG_CHOICES, Notification, LikeDislike
 from MainApp.forms import SnippetForm, UserRegistrationForm, CommentForm
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
@@ -285,10 +287,33 @@ def unread_notifications_count(request):
         'timestamp': str(datetime.now())
     })
 
-def comment_like(request):
+def add_commen_like(request):
     if request.method == 'POST':
-        import json
         data = json.loads(request.body)
-        snippet = Snippet.objects.get(id=data.get("comment_id"))
+        comment_id = data.get("comment_id")
         vote = data.get("vote")
-        user = request.user
+
+        existing_vote, created = LikeDislike.objects.get_or_create(
+            user=request.user,
+            content_type=ContentType.objects.get_for_model(Comment),
+            object_id=comment_id,
+            defaults={'vote': vote}
+        )
+
+        if not created:  # снимаем наш голос
+            if existing_vote.vote == vote:
+                # Если стоит лайк, а мы хотим убрать его, то удаляем.
+                existing_vote.delete()
+            else:  # меняем голос на противоположный
+                # Если стоит лайк, а мы хотим создать дизлайк, то лайк удаляем, дизлайк создаем
+                existing_vote.vote = vote
+                existing_vote.save()  # -> UPDATE
+
+        comment = Comment.objects.get(id=comment_id)
+        response_data = {
+            "success": True,
+            "likes_count": comment.likes_count(),
+            "dislikes_count": comment.dislikes_count(),
+        }
+
+        return JsonResponse(response_data)
