@@ -3,7 +3,7 @@ from django.dispatch import receiver
 from django.contrib.auth.models import User
 from django.dispatch import Signal
 from django.db.models import F
-from MainApp.models import Comment, Notification
+from MainApp.models import Comment, Notification, UserProfile
 
 snippet_view = Signal()
 
@@ -11,7 +11,7 @@ snippet_view = Signal()
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
-        print(f"Пользователь {instance} создан")
+        UserProfile.objects.create(user=instance)
 
 
 @receiver(snippet_view)

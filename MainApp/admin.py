@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Snippet, Tag
+from .models import Snippet, Tag, UserProfile
 from django.db.models import Count
 
 
@@ -30,3 +30,4 @@ class TagAdmin(admin.ModelAdmin):
 # Register your models here.
 admin.site.register(Snippet, SnippetAdmin)
 admin.site.register(Tag, TagAdmin)
+admin.site.register(UserProfile)
