@@ -92,6 +92,7 @@ def snippets_page(request, snippets_my):
     if tag:
         snippets = snippets.filter(tags__name=tag)
     # pagination
+    snippets = snippets.select_related("user")
     paginator = Paginator(snippets, 5)
     num_page = request.GET.get("page")
     page_obj = paginator.get_page(num_page)

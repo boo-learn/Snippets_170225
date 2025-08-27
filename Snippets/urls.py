@@ -3,6 +3,7 @@ from django.conf.urls.static import static
 from django.conf import settings
 from MainApp import views
 from django.contrib import admin
+from debug_toolbar.toolbar import debug_toolbar_urls
 
 urlpatterns = [
     path('', views.index_page, name="home"),
@@ -22,7 +23,7 @@ urlpatterns = [
     path('notifications/', views.user_notifications, name="notifications"),
     path('api/notifications/unread-count/', views.unread_notifications_count, name='unread_notifications_count'),
     path('api/comment/like', views.add_commen_like, name='comment-like'),
-]
+] + debug_toolbar_urls()
 if settings.DEBUG:
    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 # api/comment/like

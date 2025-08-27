@@ -1,0 +1,46 @@
+services:
+  - type: web
+    name: snippets-app
+    env: python
+    plan: free
+    buildCommand: "./build.sh"
+    startCommand: "./start.sh"
+    staticPublishPath: "./staticfiles"  # Включено для прямого обслуживания статики
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: DJANGO_SETTINGS_MODULE
+        value: Snippets.settings
+      - key: SECRET_KEY
+        generateValue: true
+      - key: WEB_CONCURRENCY
+        value: 4
+      - key: ALLOWED_HOSTS
+        value: ".onrender.com"
+      - key: DEBUG
+        value: false
+      - key: DB_NAME
+        fromDatabase:
+          name: snippets-db
+          property: database
+      - key: DB_USER
+        fromDatabase:
+          name: snippets-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: snippets-db
+          property: password
+      - key: DB_HOST
+        fromDatabase:
+          name: snippets-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: snippets-db
+          property: port
+    databases:
+      - name: snippets-db
+        plan: free
+        databaseName: snippets
+        user: snippets_user 
