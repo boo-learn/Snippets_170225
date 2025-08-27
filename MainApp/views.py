@@ -5,7 +5,7 @@ from datetime import datetime
 from django.contrib.contenttypes.models import ContentType
 from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
-from django.db.models import F, Q
+from django.db.models import F, Q, Prefetch
 from MainApp.models import Snippet, Comment, LANG_CHOICES, Notification, LikeDislike
 from MainApp.forms import SnippetForm, UserRegistrationForm, CommentForm, UserEditForm, UserProfileForm
 from django.contrib import auth
@@ -110,18 +110,21 @@ def snippets_page(request, snippets_my):
 
 def snippet_detail(request, id):
     # snippet = get_object_or_404(Snippet, id=id)
-    snippet = Snippet.objects.prefetch_related("comments").get(id=id)
+    snippet = Snippet.objects.prefetch_related(  # Используем аннотации для комментариев
+        Prefetch('comments',
+                 queryset=Comment.with_likes_count().select_related('author')),
+        "tags").get(id=id)
     if snippet.user != request.user and snippet.public is False:
         return HttpResponseForbidden("You are not authorized to access this page.")
     snippet_view.send(sender=None, snippet=snippet)
     comments_form = CommentForm()
     # comments = Comment.objects.filter(snippet=snippet)
-    comments = snippet.comments.all()
+    # comments = snippet.comments.all()
     context = {
         'pagename': f'Сниппет: {snippet.name}',
         "snippet": snippet,
         "comments_form": comments_form,
-        "comments": comments
+        # "comments": comments
     }
     return render(request, 'pages/snippet_detail.html', context)
 
