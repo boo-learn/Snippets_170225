@@ -109,6 +109,7 @@ def snippets_page(request, snippets_my):
 
 
 def snippet_detail(request, id):
+    # test
     # snippet = get_object_or_404(Snippet, id=id)
     snippet = Snippet.objects.prefetch_related(  # Используем аннотации для комментариев
         Prefetch('comments',
