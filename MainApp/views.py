@@ -164,13 +164,20 @@ def login(request):
         password = request.POST["password"]
 
         user = auth.authenticate(request, username=username, password=password)
-        if user is not None:
+        if user is not None: # 1
             auth.login(request, user)
             return redirect('home')
-        else:
+        else: # 2/3
+            # 2. Аккаунт не актирован
+            try:
+                user = User.objects.get(username=username)
+                if not user.is_active:
+                    errors = ["Ваш аккаунт не подтвержден. Проверьте email."]
+            except User.DoesNotExist:
+                # 3. Не верные лог/пас
+                errors = ["Неверно указаны логин или пароль"]
             context = {
-                "errors": ["Некорректные данные"],
-
+                "errors": errors,
             }
             return render(request, "pages/index.html", context)
 
