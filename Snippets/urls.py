@@ -21,6 +21,7 @@ urlpatterns = [
     path('comment/add', views.comment_add, name="comment_add"),
     path('admin/', admin.site.urls),
     path('notifications/', views.user_notifications, name="notifications"),
+    path('activate/<int:user_id>/<str:token>/', views.activate_account, name="activate-account"),
     path('api/notifications/unread-count/', views.unread_notifications_count, name='unread_notifications_count'),
     path('api/comment/like', views.add_commen_like, name='comment-like'),
 ] + debug_toolbar_urls()

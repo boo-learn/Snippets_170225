@@ -16,6 +16,8 @@ from django.contrib import messages
 from MainApp.signals import snippet_view
 from django.http import HttpResponseForbidden
 
+from MainApp.utils import verify_activation_token, send_activation_email
+
 # from django.contrib.auth.forms import UserCreationForm
 logger = logging.getLogger(__name__)
 
@@ -196,7 +198,10 @@ def user_registration(request):
         user_form = UserRegistrationForm(request.POST)
         if user_form.is_valid():
             user = user_form.save()
-            messages.success(request, f"Пользователь {user.username} успешно зарегистрирован")
+
+            send_activation_email(user, request)
+            messages.success(request, f"Пользователь {user.username} успешно зарегистрирован. "
+                                      f"Для активации, проверьте почту.")
             return redirect("home")
         else:
             context = {
@@ -351,3 +356,32 @@ def edit_profile(request):
     }
 
     return render(request, 'pages/edit_profile.html', context)
+
+
+def activate_account(request, user_id, token):
+    """
+    Подтверждение аккаунта пользователя по токену
+    """
+    try:
+        user = User.objects.get(id=user_id)
+
+        # Проверяем, не подтвержден ли уже аккаунт
+        if user.is_active:
+            messages.info(request, 'Ваш аккаунт уже подтвержден.')
+            return redirect('home')
+
+        # Проверяем токен
+        if verify_activation_token(user, token):
+            user.is_active = True
+            user.save()
+            messages.success(request,
+                             'Ваш аккаунт успешно подтвержден! Теперь вы можете войти в систему.')
+            return redirect('home')
+        else:
+            messages.error(request,
+                           'Недействительная ссылка для подтверждения. Возможно, она устарела.')
+            return redirect('home')
+
+    except User.DoesNotExist:
+        messages.error(request, 'Пользователь не найден.')
+        return redirect('home')
