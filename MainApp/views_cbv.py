@@ -1,5 +1,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import Prefetch
+from django.contrib.auth.models import User
+from django.core.exceptions import PermissionDenied
+from django.db.models import Prefetch, Q
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView, View, ListView
 from django.contrib import messages
@@ -7,7 +9,7 @@ from django.contrib import auth
 from django.shortcuts import redirect
 
 from MainApp.forms import SnippetForm, CommentForm
-from MainApp.models import Snippet, Comment, Notification
+from MainApp.models import Snippet, Comment, Notification, LANG_CHOICES
 
 
 class AddSnippetView(LoginRequiredMixin, CreateView):
@@ -49,10 +51,82 @@ class SnippetDetailView(DetailView):
         return context
 
 
+class SnippetsListView(ListView):
+    """Отображение списка сниппетов с фильтрацией, поиском и сортировкой"""
+    model = Snippet
+    template_name = 'pages/view_snippets.html'
+    context_object_name = 'snippets'
+    paginate_by = 5
+
+    def get_queryset(self):
+        my_snippets = self.kwargs.get('snippets_my', False)
+
+        if my_snippets:
+            if not self.request.user.is_authenticated:
+                raise PermissionDenied
+            queryset = Snippet.objects.filter(user=self.request.user)
+        else:
+            if self.request.user.is_authenticated:  # auth: all public + self private
+                queryset = Snippet.objects.filter(
+                    Q(public=True) | Q(public=False, user=self.request.user)
+                ).select_related("user")
+            else:  # not auth: all public
+                queryset = Snippet.objects.filter(public=True).select_related("user")
+
+        # Поиск
+        search = self.request.GET.get("search")
+        if search:
+            queryset = queryset.filter(
+                Q(name__icontains=search) |
+                Q(code__icontains=search)
+            )
+
+        # Фильтрация по языку
+        lang = self.request.GET.get("lang")
+        if lang:
+            queryset = queryset.filter(lang=lang)
+
+        # Фильтрация по пользователю
+        user_id = self.request.GET.get("user_id")
+        if user_id:
+            queryset = queryset.filter(user__id=user_id)
+
+        # Сортировка
+        sort = self.request.GET.get("sort")
+        if sort:
+            queryset = queryset.order_by(sort)
+
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        my_snippets = self.kwargs.get('snippets_my', False)
+
+        if my_snippets:
+            context['pagename'] = 'Мои сниппеты'
+        else:
+            context['pagename'] = 'Просмотр сниппетов'
+
+        # Получаем пользователей со сниппетами
+        users = User.objects.filter(snippet__isnull=False).distinct()
+
+        context.update({
+            'sort': self.request.GET.get("sort"),
+            'LANG_CHOICES': LANG_CHOICES,
+            'users': users,
+            'lang': self.request.GET.get("lang"),
+            'user_id': self.request.GET.get("user_id")
+        })
+
+        return context
+
+
 class UserLogoutView(View):
     def get(self, request):
         auth.logout(request)
         return redirect('home')
+
 
 # CBV
 # 1. Уменьшается дублирование кода
