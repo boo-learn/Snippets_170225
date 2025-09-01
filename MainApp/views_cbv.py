@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.core.exceptions import PermissionDenied
 from django.db.models import Prefetch, Q
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, DetailView, View, ListView
+from django.views.generic import CreateView, DetailView, View, ListView, UpdateView
 from django.contrib import messages
 from django.contrib import auth
 from django.shortcuts import redirect
@@ -126,6 +126,25 @@ class UserLogoutView(View):
     def get(self, request):
         auth.logout(request)
         return redirect('home')
+
+
+class SnippetEditView(UpdateView):
+    model = Snippet
+    form_class = SnippetForm
+    template_name = 'pages/add_snippet.html'
+    success_url = reverse_lazy('snippets-list')
+    pk_url_kwarg = 'id'
+
+    def get_context_data(self, **kwargs):
+        obj = self.get_object()
+        form = self.get_form()
+        print(f"form={form}")
+        print(f"obj={obj}")
+        context = super().get_context_data(**kwargs)
+        context["pagename"] = "Редактировать Сниппет"
+        context["edit"] = True
+        context["id"] = self.kwargs.get("id")
+        return context
 
 
 # CBV

@@ -189,12 +189,6 @@ def user_logout(request):
 
 def user_registration(request):
     if request.method == "GET":
-        logger.debug("Это отладочное сообщение.")
-        logger.info("Пользователь посетил страницу.")
-        logger.warning("Возможно, что-то пошло не так.")
-        logger.error("Произошла ошибка!")
-        logger.critical("Приложение в критическом состоянии!")
-
         user_form = UserRegistrationForm()
         context = {
             "user_form": user_form

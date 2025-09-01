@@ -75,5 +75,7 @@
 
 {% block script %}
 	{{ block.super }}
+    {% if not edit %}
     <script src="{% static 'js/forms.js' %}"></script>
+    {% endif %}
 {% endblock %}
