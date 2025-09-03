@@ -77,6 +77,13 @@ class Snippet(models.Model):
     def __repr__(self):
         return f"S: {self.name}|{self.lang} views:{self.views_count} public:{self.public} user:{self.user}"
 
+    class Meta:
+        ordering = ["name", "lang"]
+        indexes = [
+            models.Index(fields=["name", "lang"]),
+            models.Index(fields=["user", "name", "lang"]),
+        ]
+
 
 class Comment(models.Model):
     text = models.TextField()

@@ -68,7 +68,8 @@ class SnippetsListView(ListView):
         else:
             if self.request.user.is_authenticated:  # auth: all public + self private
                 queryset = Snippet.objects.filter(
-                    Q(public=True) | Q(public=False, user=self.request.user)
+                    # Q(public=True) | Q(public=False, user=self.request.user),
+                    Q(public=True) | Q(user=self.request.user)
                 ).select_related("user")
             else:  # not auth: all public
                 queryset = Snippet.objects.filter(public=True).select_related("user")
