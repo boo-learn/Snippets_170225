@@ -28,6 +28,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     # path('notifications/', views.user_notifications, name="notifications"),
     path('notifications/', views_cbv.UserNotificationsView.as_view(), name="notifications"),
+    path('snippet/<int:id>/subscribe/', views.subscribe_to_snippet, name="subscribe"),
     path('activate/<int:user_id>/<str:token>/', views.activate_account, name="activate-account"),
     path('api/notifications/unread-count/', views.unread_notifications_count, name='unread_notifications_count'),
     path('api/comment/like', views.add_commen_like, name='comment-like'),
@@ -35,3 +36,4 @@ urlpatterns = [
 if settings.DEBUG:
    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 # api/comment/like
+

@@ -6,7 +6,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import F, Q, Prefetch
-from MainApp.models import Snippet, Comment, LANG_CHOICES, Notification, LikeDislike
+from MainApp.models import Snippet, Comment, LANG_CHOICES, Notification, LikeDislike, Subscription
 from MainApp.forms import SnippetForm, UserRegistrationForm, CommentForm, UserEditForm, UserProfileForm
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
@@ -386,3 +386,9 @@ def activate_account(request, user_id, token):
     except User.DoesNotExist:
         messages.error(request, 'Пользователь не найден.')
         return redirect('home')
+
+
+def subscribe_to_snippet(request, id):
+    snippet = get_object_or_404(Snippet, id=id)
+    Subscription.objects.create(user=request.user, snippet=snippet)
+    return redirect('snippet-detail', id=id)

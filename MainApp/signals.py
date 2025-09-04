@@ -3,7 +3,7 @@ from django.dispatch import receiver
 from django.contrib.auth.models import User
 from django.dispatch import Signal
 from django.db.models import F
-from MainApp.models import Comment, Notification, UserProfile
+from MainApp.models import Comment, Notification, UserProfile, Snippet, Subscription
 
 snippet_view = Signal()
 
@@ -30,3 +30,17 @@ def create_comment_notification(sender, instance, created, **kwargs):
             title=f'Новый комментарий к сниппету "{instance.snippet.name}"',
             message=f'Пользователь {instance.author.username} оставил комментарий: {instance.text}'
         )
+
+
+@receiver(post_save, sender=Snippet)
+def edit_snippet_notification(sender, instance, created, **kwargs):
+    if not created:
+        subs = Subscription.objects.filter(snippet=instance)
+        for sub in subs:
+            user = sub.user
+            Notification.objects.create(
+                recipient=user,
+                notification_type='snippet_update',
+                title=f'Изменен сниппет "{instance.name}"',
+                message=f'Автор отредактировал сниппет "{instance.name}"'
+            )

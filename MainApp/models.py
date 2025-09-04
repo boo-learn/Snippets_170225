@@ -17,6 +17,9 @@ LANG_ICON = {
 }
 
 
+# User._meta.get_field('email')._unique = True
+
+
 class LikeDislike(models.Model):
     LIKE = 1
     DISLIKE = -1
@@ -41,6 +44,7 @@ class Notification(models.Model):
         ('comment', 'Новый комментарий'),
         ('like', 'Новый лайк'),
         ('follow', 'Новый подписчик'),
+        ('snippet_update', 'Обновление сниппета')
     ]
 
     recipient = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notifications')
@@ -127,3 +131,14 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return f"Профиль для {self.user.username}"
+
+
+class Subscription(models.Model):
+    """Модель для подписки пользователей на сниппеты"""
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='subscriptions')
+    snippet = models.ForeignKey(Snippet, on_delete=models.CASCADE, related_name='subscriptions')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
+    class Meta:
+        unique_together = ['user', 'snippet']
