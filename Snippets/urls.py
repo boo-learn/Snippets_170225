@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
 from MainApp import views, views_cbv
@@ -8,7 +8,7 @@ from debug_toolbar.toolbar import debug_toolbar_urls
 urlpatterns = [
     path('', views.index_page, name="home"),
     # path('snippets/add', views.add_snippet_page, name="snippet-add"),
-    path('snippets/add', views_cbv.AddSnippetView.as_view() , name="snippet-add"),
+    path('snippets/add', views_cbv.AddSnippetView.as_view(), name="snippet-add"),
     # path('snippets/list', views.snippets_page, {'snippets_my': False}, name="snippets-list"),
     path('snippets/list', views_cbv.SnippetsListView.as_view(), {'snippets_my': False}, name="snippets-list"),
     # path('snippets/my', views.snippets_page, {'snippets_my': True}, name="snippets-my"),
@@ -32,8 +32,15 @@ urlpatterns = [
     path('activate/<int:user_id>/<str:token>/', views.activate_account, name="activate-account"),
     path('api/notifications/unread-count/', views.unread_notifications_count, name='unread_notifications_count'),
     path('api/comment/like', views.add_commen_like, name='comment-like'),
-] + debug_toolbar_urls()
+]
 if settings.DEBUG:
-   urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-# api/comment/like
+    try:
+        import debug_toolbar
 
+        urlpatterns += [
+            path('__debug__/', include(debug_toolbar.urls)),
+        ]
+    except ImportError:
+        pass
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
