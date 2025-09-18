@@ -1,0 +1,10 @@
+.idea/
+*venv/
+*.pyc
+db.*
+*.log
+.env*
+tmp/
+demo/
+Dockerfile
+*.sh

@@ -109,11 +109,11 @@ class Comment(models.Model):
                                         filter=models.Q(likes__vote=LikeDislike.DISLIKE))
         )
 
-        # def likes_count(self):
-        #     return self.likes.filter(vote=LikeDislike.LIKE).count()
-        #
-        # def dislikes_count(self):
-        #     return self.likes.filter(vote=LikeDislike.DISLIKE).count()
+    def likes_count(self):
+        return self.likes.filter(vote=LikeDislike.LIKE).count()
+
+    def dislikes_count(self):
+            return self.likes.filter(vote=LikeDislike.DISLIKE).count()
 
 
 class UserProfile(models.Model):
