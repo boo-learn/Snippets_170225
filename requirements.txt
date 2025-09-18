@@ -42,6 +42,7 @@ pytest-cov==6.2.1
 pytest-django==4.11.1
 python-dotenv==1.1.1
 python-multipart==0.0.20
+psycopg2-binary==2.9.9
 PyYAML==6.0.2
 requests==2.32.4
 rich==14.1.0

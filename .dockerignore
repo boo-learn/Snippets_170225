@@ -7,4 +7,3 @@ db.*
 tmp/
 demo/
 Dockerfile
-*.sh
