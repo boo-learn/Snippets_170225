@@ -29,7 +29,7 @@ print(f"{DEBUG=}")
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost 127.0.0.1').split(' ')
 
 LOGGING = {
     'version': 1,
@@ -137,7 +137,7 @@ DATABASES = {
         'NAME': 'postgres',
         'USER': 'postgres',
         'PASSWORD': 'mysecretpassword',
-        'HOST': 'some-postgres',  # <-- Имя контейнера
+        'HOST': 'db',  # <-- Имя контейнера
         'PORT': '5432',
     }
 }
